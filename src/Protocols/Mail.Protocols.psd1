@@ -30,7 +30,7 @@
   Copyright = '(c) 2023 Microsot EEE. All rights reserved.'
   
   # Description of the functionality provided by this module
-  # Description = ''
+  Description = 'This PowerShell module that helps users communicate with a mail server with various protocols, e.g. IMAP(https://tools.ietf.org/html/rfc3501) server, POP3(https://tools.ietf.org/html/rfc1081).'
   
   # Minimum version of the Windows PowerShell engine required by this module
   # PowerShellVersion = ''
@@ -95,13 +95,13 @@
     PSData = @{
   
       # Tags applied to this module. These help with module discovery in online galleries.
-      # Tags = @()
+      Tags = @('Imap', 'Pop3', 'OAuth', 'XOAUTH2', 'Email', 'Exchange', 'O365', 'Microsoft', 'Protocols')
   
       # A URL to the license for this module.
-      # LicenseUri = ''
+      LicenseUri = 'https://github.com/DingMingyu/Protocols/blob/master/LICENSE'
   
       # A URL to the main website for this project.
-      # ProjectUri = ''
+      ProjectUri = 'https://github.com/DingMingyu/Protocols'
   
       # A URL to an icon representing this module.
       # IconUri = ''

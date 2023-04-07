@@ -5,7 +5,7 @@ The project creates a PowerShell module that helps user communicate with a mail 
 Run the below command to install the module.
   Install-Module -Name Mail.Protocols
 Please go through the scripts under .\scr\examples and you'll know how to communicate with a mail server through IMAP or POP3.
-To make the examples and tests work, you need to create .\my\MyData.psm1 in your local project folder. The file cannot be not included in the source control because it contains user info, e.g. password. The content of the file is like:
+To make the examples work, you need to create .\my\MyData.psm1 in your local project folder. The file cannot be not included in the source control because it contains user info, e.g. password. The content of the file is like:
 
 class Data {  
   [string]$Mailbox = "user@contoso.com"  
