@@ -12,7 +12,7 @@
   RootModule = '.\Protocols.psm1'
   
   # Version number of this module.
-  ModuleVersion = '0.1.0'
+  ModuleVersion = '0.1.1'
   
   # Supported PSEditions
   # CompatiblePSEditions = @()
@@ -87,7 +87,20 @@
   # ModuleList = @()
   
   # List of all files packaged with this module
-  FileList = @('.\Constants.psm1',   '.\ImapClient.psm1', '.\Loggers.psm1', 'Mail.Protocols.psd1', '.\Message.psm1', '.\PopClient.psm1', 'Protocols.psm1', '.\Result.psm1', '.\STcpClient.psm1', '.\Tokens.psm1')
+  FileList = @(
+    '.\Constants.psm1',
+    '.\ImapClient.psm1',
+    '.\Loggers.psm1',
+    '.\Mail.Protocols.psd1',
+    '.\Message.psm1',
+    '.\PopClient.psm1',
+    '.\Protocols.psm1',
+    '.\Result.psm1',
+    '.\STcpClient.psm1',
+    '.\TestMsImap.psm1',
+    '.\TestMsPop.psm1',
+    '.\Tokens.psm1'
+  )
   
   # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
   PrivateData = @{

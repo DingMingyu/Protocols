@@ -42,13 +42,13 @@ function Get-AccessTokenInteractive(
     Get AccessToken interactively from Azure.
 
     .DESCRIPTION
-    This method tryies to get an AccessToken from Azure.
+    This method tries to get an AccessToken from Azure.
       
     .PARAMETER TenantId
-    TenantId in Azure.
+    TenantId in Azure. It is not required if the app is registered as a multiple-tenant app.
 
     .PARAMETER ClientId
-    ClientId or AppId in Azure. It is not required if it is registered as a multiple-tenant app.
+    ClientId or AppId in Azure.
 
     .PARAMETER Scopes
     An array of scopes for the required AccessToken.
@@ -89,13 +89,16 @@ function Get-AccessTokenWithSecret(
     Get AccessToken with App Secret from Azure.
 
     .DESCRIPTION
-    This method tryies to get an AccessToken from Azure.
+    This method tries to get an AccessToken from Azure.
       
     .PARAMETER TenantId
-    TenantId in Azure.
+    TenantId in Azure. It is not required if the app is registered as a multiple-tenant app.
 
     .PARAMETER ClientId
-    ClientId or AppId in Azure. It is not required if it is registered as a multiple-tenant app.
+    ClientId or AppId in Azure.
+
+    .PARAMETER ClientSecret
+    The secret of the registered app.
 
     .PARAMETER Scopes
     An array of scopes for the required AccessToken.

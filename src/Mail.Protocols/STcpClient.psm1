@@ -19,13 +19,14 @@ class STcpClient {
   [void]Close() {
     if ($this.client) {
       $this.client.Close()
-      $msg = Get-Message -From "C" -Text "Connection is closed."
-      $this.LogInfo($msg)
+      $this.LogRequest("Connection is closed.")
     }
   }
   
   [void]Connect() {
     $this.client = New-Object System.Net.Sockets.TcpClient($this.server, $this.port)
+    $msg = "Connecting to server '{0}' on port {1}." -f $this.server, $this.port
+    $this.LogRequest($msg)
     $this.client.Client.SetSocketOption([System.Net.Sockets.SocketOptionLevel]::Socket, [System.Net.Sockets.SocketOptionName]::KeepAlive, $true)
     $strm = $this.client.GetStream()
     [System.Net.Security.RemoteCertificateValidationCallback]$c={return $true}
