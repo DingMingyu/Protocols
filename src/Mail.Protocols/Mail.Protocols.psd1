@@ -88,7 +88,8 @@
   
   # List of all files packaged with this module
   FileList = @(
-    '.\Constants.psm1',
+    '.\AzureSettings.psm1',
+    '.\CommandHelper.psm1',
     '.\ImapClient.psm1',
     '.\Loggers.psm1',
     '.\Mail.Protocols.psd1',
@@ -98,7 +99,9 @@
     '.\Result.psm1',
     '.\STcpClient.psm1',
     '.\TestMsImap.psm1',
+    '.\TestMsImapConnection.psm1',
     '.\TestMsPop.psm1',
+    '.\TestMsPopConnection.psm1',
     '.\Tokens.psm1'
   )
   
