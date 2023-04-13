@@ -65,3 +65,33 @@ Describe "Get-Scope" -Tags "Unit" {
     Get-Scope -AzureCloudInstance "None" -AccessType "AsUser" -AppName "IMAP" | Should be $null
   }
 }
+
+Describe "Get-Scp" -Tags "Unit" {
+  It "imap as app" {
+    Get-Scp -AppName "IMAP" -AccessType "AsApp" | Should be "IMAP.AccessAsApp"
+  }
+  It "pop as app" {
+    Get-Scp -AppName "POP" -AccessType "AsApp" | Should be "POP.AccessAsApp"
+  }
+  It "imap as user" {
+    Get-Scp -AppName "IMAP" -AccessType "AsUser" | Should be "IMAP.AccessAsUser.All"
+  }
+  It "pop as user" {
+    Get-Scp -AppName "POP" -AccessType "AsUser" | Should be "POP.AccessAsUser.All"
+  }
+}
+
+Describe "Get-Aud" -Tags "Unit" {
+  It "return azure public endpoint" {
+    Get-Aud -AzureCloudInstance "AzurePublic" | Should be "https://outlook.office365.com"
+  }
+  It "return azure China endpoint" {
+    Get-Aud -AzureCloudInstance "AzureChina" | Should be "https://partner.outlook.cn"
+  }
+  It "return azure Us Gov endpoint" {
+    Get-Aud -AzureCloudInstance "AzureUsGovernment" | Should be "https://outlook.office365.us"
+  }
+  It "return null for invalid input" {
+    Get-Aud -AzureCloudInstance "None" | Should be $null
+  }
+}

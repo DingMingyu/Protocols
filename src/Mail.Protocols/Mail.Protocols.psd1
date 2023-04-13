@@ -12,7 +12,7 @@
   RootModule = '.\Protocols.psm1'
   
   # Version number of this module.
-  ModuleVersion = '0.1.1'
+  ModuleVersion = '0.1.2'
   
   # Supported PSEditions
   # CompatiblePSEditions = @()
@@ -69,7 +69,23 @@
   # NestedModules = @()
   
   # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-  FunctionsToExport = @('*')
+  FunctionsToExport = @(
+    'Get-AccessTokenInteractive',
+    'Get-AccessTokenWithSecret',
+    'Get-Aud',
+    'Get-ImapClient',
+    'Get-Logger',
+    'Get-OutlookEndpoint',
+    'Get-PopClient',
+    'Get-Port',
+    'Get-Scope',
+    'Get-Scp',
+    'Get-TcpClient',
+    'Test-MsImap',
+    'Test-MsImapConnection',
+    'Test-MsPop',
+    'Test-MsPopConnection'
+  )
   
   # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
   CmdletsToExport = @()
@@ -89,7 +105,7 @@
   # List of all files packaged with this module
   FileList = @(
     '.\AzureSettings.psm1',
-    '.\CommandHelper.psm1',
+    '.\Analyzers.psm1',
     '.\ImapClient.psm1',
     '.\Loggers.psm1',
     '.\Mail.Protocols.psd1',
@@ -103,6 +119,8 @@
     '.\TestMsPop.psm1',
     '.\TestMsPopConnection.psm1',
     '.\Tokens.psm1'
+    '.\UserInputAssistant.psm1'
+    '.\Utility.psm1'
   )
   
   # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.

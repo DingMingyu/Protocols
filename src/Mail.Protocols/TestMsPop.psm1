@@ -1,8 +1,10 @@
+using module .\Analyzers.psm1
 using module .\AzureSettings.psm1
 using module .\STcpClient.psm1
 using module .\PopClient.psm1
 using module .\Tokens.psm1
 using module .\Result.psm1
+using module .\Loggers.psm1
 
 function Test-MsPop (
   [string]$Mailbox,
@@ -82,11 +84,22 @@ function Test-MsPop (
   else {
     if ($ClientSecret) { # App flow
       $token = Get-AccessTokenWithSecret -TenantId $TenantId -ClientId $ClientId -Scopes $scopes -ClientSecret $ClientSecret -AzureCloudInstance $AzureCloudInstance
+      $accessType = "AsApp"
     }
     else { # User delegation flow
       $token = Get-AccessTokenInteractive -TenantId $TenantId -ClientId $ClientId -Scopes $scopes -AzureCloudInstance $AzureCloudInstance
+      $accessType = "AsUser"
     }
     $result = $pop.O365Authenticate($token.AccessToken, $Mailbox)
+    if (!$result.Success) {
+      $aud = Get-Aud -AzureCloudInstance $AzureCloudInstance
+      $scp = Get-Scp -AppName "POP" -AccessType $accessType
+      $analyzer = Get-Analyzer -Name "AccessTokenAnalyzer"
+      if ($analyzer) {
+        $analyses = $analyzer.Analyze($Mailbox, $token.AccessToken, $scp, $aud)
+        $analyses | ForEach-Object { $logger.Info($_) }
+      }
+    }
   }
   if ($result.Success) {
     $result = $pop.ExecuteCommand('LIST')

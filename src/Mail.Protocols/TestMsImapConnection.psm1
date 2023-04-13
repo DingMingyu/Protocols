@@ -1,5 +1,5 @@
 using module .\TestMsImap.psm1
-using module .\CommandHelper.psm1
+using module .\UserInputAssistant.psm1
 
 function Test-MsImapConnection () {
   <#
@@ -17,19 +17,20 @@ function Test-MsImapConnection () {
     .EXAMPLE
     PS>Test-MsImapConnection
   #>
-  $logPath = GetLogPath
-  $azureCloudInstance = GetAzureCloudInstance
-  $mailbox = GetMailbox
-  $authType = GetAuthType
+  $assistant = Get-UserInputAssistant
+  $logPath = $assistant.GetLogPath()
+  $azureCloudInstance = $assistant.GetAzureCloudInstance()
+  $mailbox = $assistant.GetMailbox()
+  $authType = $assistant.GetAuthType()
   if ($authType -eq 1) { # OAuth
-    $flowType = GetFlowType
-    $tenantId = GetTenantId
-    $clientId = GetClientId
+    $flowType = $assistant.GetFlowType()
+    $tenantId = $assistant.GetTenantId()
+    $clientId = $assistant.GetClientId()
     if ($flowType -eq 1) { # as user
       return Test-MsImap -Mailbox $mailbox -TenantId $tenantId -ClientId $clientId -AzureCloudInstance $azureCloudInstance -LogPath $logPath
     }
     else { # as app
-      $clientSecret = GetClientSecret
+      $clientSecret = $assistant.GetClientSecret()
       return Test-MsImap -Mailbox $mailbox -TenantId $tenantId -ClientId $clientId -ClientSecret $clientSecret -AzureCloudInstance $azureCloudInstance -LogPath $logPath
     }
   }

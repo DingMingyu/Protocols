@@ -1,36 +1,3 @@
-function Get-O365Token(
-  [string]$AccessToken,
-  [string]$Upn
-) {
-  <#
-    .SYNOPSIS
-    Get Tokne for O365 authentication.
-
-    .DESCRIPTION
-    This function build an O365 token with Azure AccessToken and the target user's UPN.
-      
-    .PARAMETER AccessToken
-    AccessToken retrieved from Azure.
-
-    .PARAMETER Upn
-    User's UPN.
-
-    .INPUTS
-    None. You cannot pipe objects to Get-O365Token
-
-    .OUTPUTS
-    It returns an O365 authentication token.
-
-    .EXAMPLE
-    PS>Get-O365Token -AccessToken $AccessToken -Upn user@contoso.com
-  #>
-  [char]$ctrlA = 1
-  $token = "user=" + $Upn + $ctrlA + "auth=Bearer " + $AccessToken + $ctrlA + $ctrlA
-  $bytes = [System.Text.Encoding]::ASCII.GetBytes($token)
-  $encodedToken = [Convert]::ToBase64String($bytes)
-  return $encodedToken
-}
-
 function Get-AccessTokenInteractive(
   [string]$TenantId,
   [string]$ClientId,

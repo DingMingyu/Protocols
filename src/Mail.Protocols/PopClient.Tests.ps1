@@ -1,5 +1,6 @@
 using module .\PopClient.psm1
 using module .\DummyTcpClient.psm1
+using module .\Utility.psm1
 
 Describe "PopClient" -Tags "Unit" {
   It "connect socket when Connect is called" {
@@ -58,7 +59,7 @@ Describe "PopClient" -Tags "Unit" {
 	  $client.responses.Add($success)
     $result = $pop.O365Authenticate($token, $upn)
     $result.Success | Should be $true
-    $ot = Get-O365Token -AccessToken $token -Upn $upn
+    $ot = BuildO365Token -AccessToken $token -Upn $upn
     $client.requests.Count | Should be 2
     $client.requests[0] | Should be "AUTH XOAUTH2"
 	  $client.requests[1] | Should be $ot

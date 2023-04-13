@@ -1,6 +1,7 @@
 using module .\STcpClient.psm1
 using module .\Tokens.psm1
 using module .\Result.psm1
+using module .\Utility.psm1
 
 class ImapClient {
   [int]$tag = 0
@@ -36,7 +37,7 @@ class ImapClient {
   }
 
   [System.Object]O365Authenticate([string]$accessToken, [string]$upn) {
-    $token = Get-O365Token -AccessToken $accessToken -Upn $upn
+    $token = BuildO365Token -AccessToken $accessToken -Upn $upn
     return $this.xOauth2Authenticate($token)
   }
 

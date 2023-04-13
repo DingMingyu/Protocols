@@ -1,6 +1,7 @@
 using module .\STcpClient.psm1
 using module .\Tokens.psm1
 using module .\Result.psm1
+using module .\Utility.psm1
 
 class PopClient {
 
@@ -57,7 +58,7 @@ class PopClient {
   }
 
   [System.Object]O365Authenticate([string]$accessToken, [string]$upn) {
-    $token = Get-O365Token -AccessToken $accessToken -Upn $upn
+    $token = BuildO365Token -AccessToken $accessToken -Upn $upn
     return $this.xOauth2Authenticate($token)
   }
 

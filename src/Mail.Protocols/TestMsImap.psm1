@@ -1,8 +1,10 @@
 using module .\AzureSettings.psm1
+using module .\Analyzers.psm1
 using module .\STcpClient.psm1
 using module .\ImapClient.psm1
 using module .\Tokens.psm1
 using module .\Result.psm1
+using module .\Loggers.psm1
 
 function Test-MsImap (
   [string]$Mailbox,
@@ -82,14 +84,25 @@ function Test-MsImap (
   else{
     if ($ClientSecret) {
       $token = Get-AccessTokenWithSecret -TenantId $TenantId -ClientId $ClientId -Scopes $scopes -ClientSecret $ClientSecret -AzureCloudInstance $AzureCloudInstance
+      $accessType = "AsApp"
     }
     else {
       $token = Get-AccessTokenInteractive -TenantId $TenantId -ClientId $ClientId -Scopes $scopes -AzureCloudInstance $AzureCloudInstance
+      $accessType = "AsUser"
     }
-    $result = $imap.O365Authenticate($token.AccessToken, $Mailbox)
+    $result = $imap.O365Authenticate($token.AccessToken, $Mailbox)    
   }
   if ($result.Success) {
     $result = $imap.ExecuteCommand('LIST "" *')
+  }
+  if (!$result.Success -and !$pass) { # failed OAuth connection.
+    $aud = Get-Aud -AzureCloudInstance $AzureCloudInstance
+    $scp = Get-Scp -AppName "IMAP" -AccessType $accessType
+    $analyzer = Get-Analyzer -Name "AccessTokenAnalyzer"
+    if ($analyzer) {
+      $analyses = $analyzer.Analyze($Mailbox, $token.AccessToken, $scp, $aud)
+      $analyses | ForEach-Object { $logger.Info($_) }
+    }
   }
   $imap.Close()
   if ($result.Success) {
