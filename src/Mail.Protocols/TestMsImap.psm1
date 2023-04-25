@@ -90,7 +90,7 @@ function Test-MsImap (
       $token = Get-AccessTokenInteractive -TenantId $TenantId -ClientId $ClientId -Scopes $scopes -AzureCloudInstance $AzureCloudInstance
       $accessType = "AsUser"
     }
-    $result = $imap.O365Authenticate($token.AccessToken, $Mailbox)    
+    $result = $imap.O365Authenticate($token.AccessToken, $Mailbox)
   }
   if ($result.Success) {
     $result = $imap.ExecuteCommand('LIST "" *')

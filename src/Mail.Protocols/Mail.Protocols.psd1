@@ -12,7 +12,7 @@
   RootModule = '.\Protocols.psm1'
   
   # Version number of this module.
-  ModuleVersion = '0.1.2'
+  ModuleVersion = '0.1.3'
   
   # Supported PSEditions
   # CompatiblePSEditions = @()
@@ -75,6 +75,8 @@
     'Get-Aud',
     'Get-ImapClient',
     'Get-Logger',
+    'Get-MsImapClient',
+    'Get-MsPopClient',
     'Get-OutlookEndpoint',
     'Get-PopClient',
     'Get-Port',
@@ -106,6 +108,8 @@
   FileList = @(
     '.\AzureSettings.psm1',
     '.\Analyzers.psm1',
+    '.\GetMsImapClient.psm1',
+    '.\GetMsPopClient.psm1',
     '.\ImapClient.psm1',
     '.\Loggers.psm1',
     '.\Mail.Protocols.psd1',
