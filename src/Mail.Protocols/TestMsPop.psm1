@@ -72,7 +72,7 @@ function Test-MsPop (
   }
 
   if (!$LogPath) {
-    $LogPath = "logs\imap_{0:yyyyMMdd}.log" -f (Get-Date)
+    $LogPath = "logs\pop_{0:yyyyMMdd}.log" -f (Get-Date)
   }
 
   $logger = Get-Logger -FilePath $LogPath
