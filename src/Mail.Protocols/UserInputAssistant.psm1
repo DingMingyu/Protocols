@@ -64,8 +64,7 @@ class UserInputAssistant {
   }
 
   [string]GetLogPath() {
-    $defaultPath = "logs\imap_{0:yyyyMMdd}.log" -f (Get-Date)
-    return Read-Host -Prompt "Please input log file path. If empty, it will be set as: $defaultPath."
+    return Read-Host -Prompt "Please input log file path. If empty, it applies the default path of the app. Typically under \logs of current directory."
   }
   
   [int]GetFlowType() {
