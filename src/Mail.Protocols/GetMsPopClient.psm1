@@ -25,10 +25,10 @@ function Get-MsPopClient () {
   #>
   $assistant = Get-UserInputAssistant
   $logPath = $assistant.GetLogPath()
-  $logger = Get-Logger -FilePath $LogPath
+  $logger = Get-Logger -FilePath $logPath
 
   $azureCloudInstance = $assistant.GetAzureCloudInstance()
-  $server = Get-OutlookEndpoint -AzureCloudInstance $AzureCloudInstance
+  $server = Get-OutlookEndpoint -AzureCloudInstance $azureCloudInstance
   $port = Get-Port -AppName "POP"
   $client = Get-TcpClient -Server $server -Port $port -Logger $logger
   $pop = Get-PopClient -TcpClient $client
@@ -40,21 +40,27 @@ function Get-MsPopClient () {
     $tenantId = $assistant.GetTenantId()
     $clientId = $assistant.GetClientId()
     if ($flowType -eq 1) { # as user
-      $scopes = @(Get-Scope -AppName "POP" -AccessType "AsUser" -AzureCloudInstance $AzureCloudInstance)
-      $token = Get-AccessTokenInteractive -TenantId $TenantId -ClientId $ClientId -Scopes $scopes -AzureCloudInstance $AzureCloudInstance
+      $scopes = @(Get-Scope -AppName "POP" -AccessType "AsUser" -AzureCloudInstance $azureCloudInstance)
+      $token = Get-AccessTokenInteractive -TenantId $tenantId -ClientId $clientId -Scopes $scopes -AzureCloudInstance $azureCloudInstance
     }
     else { # as app
-      $scopes = @(Get-Scope -AppName "POP" -AccessType "AsApp" -AzureCloudInstance $AzureCloudInstance)
+      $scopes = @(Get-Scope -AppName "POP" -AccessType "AsApp" -AzureCloudInstance $azureCloudInstance)
       $clientSecret = $assistant.GetClientSecret()
-      $token = Get-AccessTokenWithSecret -TenantId $TenantId -ClientId $ClientId -Scopes $scopes -ClientSecret $ClientSecret -AzureCloudInstance $AzureCloudInstance
+      $token = Get-AccessTokenWithSecret -TenantId $tenantId -ClientId $clientId -Scopes $scopes -ClientSecret $clientSecret -AzureCloudInstance $azureCloudInstance
     }
     $pop.Connect()
-    $result = $pop.O365Authenticate($token.AccessToken, $Mailbox)
+    $result = $pop.O365Authenticate($token.AccessToken, $mailbox)
   }
   else { # basic auth
-    $pass = GetPass
+    $loginUser = $assistant.GetLoginUser()
+    $pass = $assistant.GetPassword()
     $pop.Connect()
-    $result = $pop.Login($Mailbox, $Pass)
+    if ($loginUser) {
+      $result = $pop.Login($loginUser, $mailbox, $pass)  
+    }
+    else {
+      $result = $pop.Login($mailbox, $pass)
+    }    
   }
   if ($result.Success) {
     return $pop

@@ -1,17 +1,16 @@
 Import-Module MSAL.PS
 
-Add-Type -TypeDefinition @"
-  public enum AccessType
-  {
-    AsUser,
-    AsApp
-  }
-  public enum AppName
-  {
-    IMAP,
-    POP   
-  }
-"@
+enum AccessType
+{
+  AsUser
+  AsApp
+}
+  
+enum AppName
+{
+  IMAP
+  POP   
+}
 
 function Get-OutlookEndpoint (
   [Microsoft.Identity.Client.AzureCloudInstance]$AzureCloudInstance = [Microsoft.Identity.Client.AzureCloudInstance]::AzurePublic

@@ -12,6 +12,7 @@ function Test-MsPop (
   [string]$ClientId = "",
   [string]$ClientSecret = "",
   [string]$Pass = "",
+  [string]$LoginUser = "",
   [Microsoft.Identity.Client.AzureCloudInstance]$AzureCloudInstance=[Microsoft.Identity.Client.AzureCloudInstance]::AzurePublic,
   [string]$LogPath = ""
 ) {
@@ -35,6 +36,9 @@ function Test-MsPop (
 
     .PARAMETER Pass
     The password for basic authentication.
+
+    .PARAMETER LoginUser
+    For basic authentication, if login with a different account than the target mailbox.
 
     .PARAMETER AzureCloudInstance
     Azure instance name.
@@ -79,7 +83,12 @@ function Test-MsPop (
 
   if ($Pass) {
     # basic auth
-    $result = $pop.Login($Mailbox, $Pass)
+    if ($LoginUser) {
+      $result = $pop.Login($LoginUser, $Mailbox, $Pass)
+    }
+    else {
+      $result = $pop.Login($Mailbox, $Pass)
+    }    
   }
   else {
     if ($ClientSecret) { # App flow

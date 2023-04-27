@@ -7,6 +7,7 @@ Describe "UserInputAssistant" -Tags "Unit" {
     $obj.GetAuthType.GetType().Name | Should be "PSMethod"
     $obj.GetMailbox.GetType().Name | Should be "PSMethod"
     $obj.GetPassword.GetType().Name | Should be "PSMethod"
+    $obj.GetLoginUser.GetType().Name | Should be "PSMethod"
     $obj.GetLogPath.GetType().Name | Should be "PSMethod"
     $obj.GetFlowType.GetType().Name | Should be "PSMethod"
     $obj.GetTenantId.GetType().Name | Should be "PSMethod"

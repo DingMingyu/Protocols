@@ -35,7 +35,8 @@ function Test-MsPopConnection () {
     }
   }
   else { # basic auth
-    $pass = GetPass
-    Test-MsPop -Mailbox $mailbox -Pass $pass -AzureCloudInstance $azureCloudInstance -LogPath $logPath
+    $loginUser = $assistant.GetLoginUser()
+    $pass = $assistant.GetPassword()
+    Test-MsPop -Mailbox $mailbox -Pass $pass -LoginUser $loginUser -AzureCloudInstance $azureCloudInstance -LogPath $logPath
   }
 }

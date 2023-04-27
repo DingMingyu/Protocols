@@ -12,6 +12,7 @@ function Test-MsImap (
   [string]$ClientId = "",
   [string]$ClientSecret = "",
   [string]$Pass = "",
+  [string]$LoginUser = "",
   [Microsoft.Identity.Client.AzureCloudInstance]$AzureCloudInstance=[Microsoft.Identity.Client.AzureCloudInstance]::AzurePublic,
   [string]$LogPath = ""
 ) {
@@ -35,6 +36,9 @@ function Test-MsImap (
 
     .PARAMETER Pass
     The password for basic authentication.
+
+    .PARAMETER LoginUser
+    For basic authentication, if login with a different account than the target mailbox.
 
     .PARAMETER AzureCloudInstance
     Azure instance name.
@@ -79,7 +83,12 @@ function Test-MsImap (
   
   if ($Pass) {
     # basic auth
-    $result = $imap.Login($Mailbox, $Pass)
+    if ($LoginUser) {
+      $result = $imap.Login($LoginUser, $Mailbox, $Pass)
+    }
+    else {
+      $result = $imap.Login($Mailbox, $Pass)
+    }    
   }
   else{
     if ($ClientSecret) {

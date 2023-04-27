@@ -6,9 +6,11 @@ using module .\Utility.psm1
 class ImapClient {
   [int]$tag = 0
   $client #[STcpClient]
+  $utility #[Utility]
 
   ImapClient($client) {
     $this.client = $client
+    $this.utility = Get-Utility
   }
 
   [void]Connect() {
@@ -37,12 +39,16 @@ class ImapClient {
   }
 
   [System.Object]O365Authenticate([string]$accessToken, [string]$upn) {
-    $token = BuildO365Token -AccessToken $accessToken -Upn $upn
+    $token = $this.utility.BuildO365Token($accessToken, $upn)
     return $this.xOauth2Authenticate($token)
   }
 
   [System.Object]Login([string]$user, [string]$pass) {
     return $this.ExecuteCommand("login $user $pass")
+  }
+
+  [System.Object]Login([string]$user, [string]$targetMailbox, [string]$pass) {
+    return $this.ExecuteCommand("login $user\$targetMailbox $pass")
   }
 
   [System.Object]executeInternal($cmd) {

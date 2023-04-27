@@ -110,7 +110,8 @@ Describe "ImapClient" -Tags "Unit" {
     $client.responses.Add($success)
     $result = $imap.O365Authenticate($token, $upn)
     $result.Success | Should be $true
-    $ot = BuildO365Token -AccessToken $token -Upn $upn
+    $utility = Get-Utility
+    $ot = $utility.BuildO365Token($token, $upn)
     $cmd = "0001 AUTHENTICATE XOAUTH2 $ot"
     $client.requests.Count | Should be 1
     $client.requests[0] | Should be $cmd
@@ -129,6 +130,23 @@ Describe "ImapClient" -Tags "Unit" {
     $client.requests[0] | Should be $cmd
     $client.logs.Count | Should be 2
     $client.logs[0] | Should be "C 0001 LOGIN $user ****"
+    $client.logs[1] | Should be "S $success"
+  }
+  It "Login with user, targetMailbox and pass" {
+    $client = Get-DummyTcpClient
+    $imap = Get-ImapClient -TcpClient $client
+    $pass = "Password12#"
+    $user = "user@contoso.com"
+    $mailbox = "shared@contoso.com"
+    $success = "0001 OK Login completed."
+    $client.responses.Add($success)
+    $result = $imap.Login($user, $mailbox, $pass)
+    $result.Success | Should be $true
+    $cmd = "0001 LOGIN $user\$mailbox $pass"
+    $client.requests.Count | Should be 1
+    $client.requests[0] | Should be $cmd
+    $client.logs.Count | Should be 2
+    $client.logs[0] | Should be "C 0001 LOGIN $user\$mailbox ****"
     $client.logs[1] | Should be "S $success"
   }
 }

@@ -35,7 +35,8 @@ function Test-MsImapConnection () {
     }
   }
   else { # basic auth
-    $pass = GetPass
-    Test-MsImap -Mailbox $mailbox -Pass $pass -AzureCloudInstance $azureCloudInstance -LogPath $logPath
+    $loginUser = $assistant.GetLoginUser()
+    $pass = $assistant.GetPassword()
+    Test-MsImap -Mailbox $mailbox -Pass $pass -LoginUser $loginUser -AzureCloudInstance $azureCloudInstance -LogPath $logPath
   }
 }

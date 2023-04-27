@@ -59,7 +59,8 @@ Describe "PopClient" -Tags "Unit" {
 	  $client.responses.Add($success)
     $result = $pop.O365Authenticate($token, $upn)
     $result.Success | Should be $true
-    $ot = BuildO365Token -AccessToken $token -Upn $upn
+    $utility = Get-Utility
+    $ot = $utility.BuildO365Token($token, $upn)
     $client.requests.Count | Should be 2
     $client.requests[0] | Should be "AUTH XOAUTH2"
 	  $client.requests[1] | Should be $ot
@@ -79,6 +80,26 @@ Describe "PopClient" -Tags "Unit" {
     $client.requests[1] | Should be "PASS $pass"
     $client.logs.Count | Should be 4
     $client.logs[0] | Should be "C USER $user"
+    $client.logs[1] | Should be "S +"
+    $client.logs[2] | Should be "C PASS ****"
+    $client.logs[3] | Should be "S $success"
+  }
+  It "Login with user, targetMailbox and pass" {
+    $client = Get-DummyTcpClient
+    $pop = Get-PopClient -TcpClient $client
+    $pass = "Password12#"
+    $user = "user@contoso.com"
+    $mailbox = "shared@contoso.com"
+    $client.responses.Add("+")
+	  $success = "+OK User login successfully."
+	  $client.responses.Add($success)
+    $result = $pop.Login($user, $mailbox, $pass)
+    $result.Success | Should be $true
+    $client.requests.Count | Should be 2
+    $client.requests[0] | Should be "USER $user\$mailbox"
+    $client.requests[1] | Should be "PASS $pass"
+    $client.logs.Count | Should be 4
+    $client.logs[0] | Should be "C USER $user\$mailbox"
     $client.logs[1] | Should be "S +"
     $client.logs[2] | Should be "C PASS ****"
     $client.logs[3] | Should be "S $success"

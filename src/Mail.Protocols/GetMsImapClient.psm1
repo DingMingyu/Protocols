@@ -25,10 +25,10 @@ function Get-MsImapClient () {
   #>
   $assistant = Get-UserInputAssistant
   $logPath = $assistant.GetLogPath()
-  $logger = Get-Logger -FilePath $LogPath
+  $logger = Get-Logger -FilePath $logPath
 
   $azureCloudInstance = $assistant.GetAzureCloudInstance()
-  $server = Get-OutlookEndpoint -AzureCloudInstance $AzureCloudInstance
+  $server = Get-OutlookEndpoint -AzureCloudInstance $azureCloudInstance
   $port = Get-Port -AppName "IMAP"
   $client = Get-TcpClient -Server $server -Port $port -Logger $logger
   $imap = Get-ImapClient -TcpClient $client
@@ -40,21 +40,27 @@ function Get-MsImapClient () {
     $tenantId = $assistant.GetTenantId()
     $clientId = $assistant.GetClientId()
     if ($flowType -eq 1) { # as user
-      $scopes = @(Get-Scope -AppName "IMAP" -AccessType "AsUser" -AzureCloudInstance $AzureCloudInstance)
-      $token = Get-AccessTokenInteractive -TenantId $TenantId -ClientId $ClientId -Scopes $scopes -AzureCloudInstance $AzureCloudInstance
+      $scopes = @(Get-Scope -AppName "IMAP" -AccessType "AsUser" -AzureCloudInstance $azureCloudInstance)
+      $token = Get-AccessTokenInteractive -TenantId $tenantId -ClientId $clientId -Scopes $scopes -AzureCloudInstance $azureCloudInstance
     }
     else { # as app
-      $scopes = @(Get-Scope -AppName "IMAP" -AccessType "AsApp" -AzureCloudInstance $AzureCloudInstance)
+      $scopes = @(Get-Scope -AppName "IMAP" -AccessType "AsApp" -AzureCloudInstance $azureCloudInstance)
       $clientSecret = $assistant.GetClientSecret()
-      $token = Get-AccessTokenWithSecret -TenantId $TenantId -ClientId $ClientId -Scopes $scopes -ClientSecret $ClientSecret -AzureCloudInstance $AzureCloudInstance
+      $token = Get-AccessTokenWithSecret -TenantId $tenantId -ClientId $clientId -Scopes $scopes -ClientSecret $clientSecret -AzureCloudInstance $azureCloudInstance
     }
     $imap.Connect()
-    $result = $imap.O365Authenticate($token.AccessToken, $Mailbox)
+    $result = $imap.O365Authenticate($token.AccessToken, $mailbox)
   }
   else { # basic auth
-    $pass = GetPass
+    $loginUser = $assistant.GetLoginUser()
+    $pass = $assistant.GetPassword()
     $imap.Connect()
-    $result = $imap.Login($Mailbox, $Pass)
+    if ($loginUser) {
+      $result = $imap.Login($loginUser, $mailbox, $pass)
+    }
+    else {
+      $result = $imap.Login($mailbox, $pass)
+    }    
   }
   if ($result.Success) {
     return $imap

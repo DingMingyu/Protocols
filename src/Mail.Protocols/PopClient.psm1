@@ -4,11 +4,12 @@ using module .\Result.psm1
 using module .\Utility.psm1
 
 class PopClient {
-
   $client #[STcpClient]
+  $utility #[Utility]
 
   PopClient($client) {
     $this.client = $client
+    $this.utility = Get-Utility
   }
   
   [void]Connect() {
@@ -57,8 +58,15 @@ class PopClient {
     return $false
   }
 
+  [System.Object]Login([string]$user, [string]$targetMailbox, [string]$pass) {
+    if ($this.ExecuteCommand("USER $user\$targetMailbox")) {
+      return $this.ExecuteCommand("PASS $pass")
+    }
+    return $false
+  }
+
   [System.Object]O365Authenticate([string]$accessToken, [string]$upn) {
-    $token = BuildO365Token -AccessToken $accessToken -Upn $upn
+    $token = $this.utility.BuildO365Token($accessToken, $upn)
     return $this.xOauth2Authenticate($token)
   }
 
