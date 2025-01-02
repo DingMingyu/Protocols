@@ -33,6 +33,21 @@ Describe "PopClient" -Tags "Unit" {
     $client.logs[0] | Should be "C $cmd"
     $client.logs[1] | Should be "S $response"
   }
+  It "execute can skip server log" {
+    $client = Get-DummyTcpClient
+    $pop = Get-PopClient -TcpClient $client
+    $cmd = "do something"
+    $response = "+OK"
+    $client.responses.Add($response)
+    $result = $pop.ExecuteCommand($cmd, $false)
+    $result.Success | Should be $true
+    $result.Payload | Should be $response
+    $result.ErrorMessage | Should be ""
+    $client.requests.Count | Should be 1
+    $client.requests[0] | Should be $cmd
+    $client.logs.Count | Should be 1
+    $client.logs[0] | Should be "C $cmd"
+  }
   It "execute fail if the response is not OK" {
     $client = Get-DummyTcpClient
     $pop = Get-PopClient -TcpClient $client

@@ -28,6 +28,21 @@ Describe "ImapClient" -Tags "Unit" {
     $client.logs.Count | Should be 1
     $client.logs[0] | Should be "S closed"
   }
+  It "execute can skip server log" {
+    $client = Get-DummyTcpClient
+    $imap = Get-ImapClient -TcpClient $client
+    $cmd = "do something"
+    $response = "0001 OK"
+    $client.responses.Add($response)
+    $result = $imap.ExecuteCommand($cmd, $false)
+    $result.Success | Should be $true
+    $result.Payload | Should be $response
+    $result.ErrorMessage | Should be ""
+    $client.requests.Count | Should be 1
+    $client.requests[0] | Should be "0001 $cmd"
+    $client.logs.Count | Should be 1
+    $client.logs[0] | Should be "C 0001 $cmd"
+  }
   It "execute to send command to socket and wait for response" {
     $client = Get-DummyTcpClient
     $imap = Get-ImapClient -TcpClient $client

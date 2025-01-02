@@ -22,9 +22,13 @@ class ImapClient {
   }
 
   [System.Object]ExecuteCommand([string]$cmd) {
+    return $this.ExecuteCommand($cmd, $true)
+  }
+
+  [System.Object]ExecuteCommand([string]$cmd, [bool]$shouldLog) {
     $this.tag++
     $cmdText = [string]::Format("{0} {1}", $this.getTagText(), $cmd)
-    return $this.executeInternal($cmdText)
+    return $this.executeInternal($cmdText, $shouldLog)
   }
 
   [System.Object]SaveEmail([string]$folder, [string]$content) {
@@ -33,7 +37,7 @@ class ImapClient {
     $this.client.SubmitRequest($cmdText)
     $line = $this.client.ReadResponse($true)
     if ($line -and $line.StartsWith("+ Ready for additional command text.")) {
-      return $this.executeInternal($content)
+      return $this.executeInternal($content, $true)
     }
     return Get-Result -Success $false -Payload $line -ErrorMessage 'IMAP should return "+ Ready for additional command text." for append command.'
   }
@@ -51,7 +55,7 @@ class ImapClient {
     return $this.ExecuteCommand("login $user\$targetMailbox $pass")
   }
 
-  [System.Object]executeInternal($cmd) {
+  [System.Object]executeInternal($cmd, [bool]$shouldLog) {
     $this.client.SubmitRequest($cmd, $this.redact($cmd))
     $tagText = $this.getTagText()
     $sb = [System.Text.StringBuilder]::new()
@@ -63,7 +67,7 @@ class ImapClient {
       else {
         $sb.AppendLine()
       }        
-      $line = $this.client.ReadResponse($true)
+      $line = $this.client.ReadResponse($shouldLog)
       $sb.Append($line)
     }
     while(!$line.StartsWith($tagText + " "))

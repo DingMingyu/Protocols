@@ -21,9 +21,13 @@ class PopClient {
   }
 
   [System.Object]ExecuteCommand([string]$cmd) {
+    return $this.ExecuteCommand($cmd, $true)
+  }
+
+  [System.Object]ExecuteCommand([string]$cmd, [bool]$shouldLog) {
     $this.client.SubmitRequest($cmd, $this.redact($cmd))
     $sb = [System.Text.StringBuilder]::new()
-    $line = $this.client.ReadResponse($true)
+    $line = $this.client.ReadResponse($shouldLog)
     $sb.Append($line)
     $success = $line.StartsWith("+")
     if ($success) {
@@ -37,7 +41,7 @@ class PopClient {
 
       if ($hasMore) {
         do {
-          $line = $this.client.ReadResponse($true)
+          $line = $this.client.ReadResponse($shouldLog)
           $sb.AppendLine()
           $sb.Append($line)
         }
