@@ -36,7 +36,7 @@ class ImapClient {
     $cmdText = $this.getTagText() + " APPEND $folder {" + $content.Length + "}"
     $this.client.SubmitRequest($cmdText)
     $line = $this.client.ReadResponse($true)
-    if ($line -and $line.StartsWith("+ Ready for additional command text.")) {
+    if ($line -and $line.StartsWith("+")) {
       return $this.executeInternal($content, $true)
     }
     return Get-Result -Success $false -Payload $line -ErrorMessage 'IMAP should return "+ Ready for additional command text." for append command.'
