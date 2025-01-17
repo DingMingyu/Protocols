@@ -100,7 +100,7 @@ Describe "ImapClient" -Tags "Unit" {
   It "fail to save file if return unexpected result" {
     $client = Get-DummyTcpClient
     $imap = Get-ImapClient -TcpClient $client
-    $hint = "+ Not ready"
+    $hint = "Not ready"
     $client.responses.Add($hint)
     $res = "0001 OK [APPENDUID 17 25] APPEND completed."
     $client.responses.Add($res)
